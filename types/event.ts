@@ -32,8 +32,8 @@ export type Event = {
   town: Town;
   venue: Venue;
   category: EventCategory;
-  imageUrl: string;
-  sourceUrl: string;
+  imageUrl?: string;
+  sourceUrl?: string;
   cost: string;
   isFamilyFriendly: boolean;
 };
