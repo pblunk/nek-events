@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { sampleEvents } from '@/data/events';
 import { theme } from '@/constants/Colors';
+import { formatEventDateRange } from '@/utils/formatEvent';
 
 export default function EventDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,12 +21,13 @@ export default function EventDetailsScreen() {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: event.title }} />
-      <Text style={styles.date}>{event.date}</Text>
+      <Text style={styles.date}>{formatEventDateRange(event)}</Text>
       <Text style={styles.title}>{event.title}</Text>
       <Text style={styles.meta}>
-        {event.time} · {event.town}
+        {event.category} · {event.town}
       </Text>
-      <Text style={styles.venue}>{event.venue}</Text>
+      <Text style={styles.venue}>{event.venue.name}</Text>
+      <Text style={styles.venue}>{event.cost}</Text>
       <Text style={styles.body}>{event.description}</Text>
     </View>
   );
