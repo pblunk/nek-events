@@ -16,8 +16,11 @@ export function EventCard({ event }: EventCardProps) {
         <Text style={styles.category}>{event.category}</Text>
       </View>
       <Text style={styles.title}>{event.title}</Text>
+      <Text style={styles.description} numberOfLines={2}>
+        {event.description}
+      </Text>
       <Text style={styles.meta}>
-        {event.venue.name} · {event.town}
+        {event.town} · {event.venue.name}
       </Text>
       <Text style={styles.venue}>{event.cost}</Text>
       {event.isFamilyFriendly ? <Text style={styles.family}>Family friendly</Text> : null}
@@ -64,6 +67,12 @@ const styles = StyleSheet.create({
   meta: {
     color: theme.colors.slate,
     fontSize: 15,
+    marginTop: theme.spacing.sm,
+  },
+  description: {
+    color: theme.colors.muted,
+    fontSize: 15,
+    lineHeight: 21,
     marginTop: theme.spacing.sm,
   },
   venue: {

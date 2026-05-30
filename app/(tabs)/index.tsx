@@ -8,17 +8,19 @@ import { theme } from '@/constants/Colors';
 export default function EventsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.eyebrow}>Northeast Kingdom</Text>
-      <Text style={styles.title}>Local Events</Text>
-      <Text style={styles.subtitle}>A simple starting point for browsing community events across the NEK.</Text>
+      <View style={styles.header}>
+        <Text style={styles.eyebrow}>Northeast Kingdom</Text>
+        <Text style={styles.title}>NEK Events</Text>
+      </View>
 
       <FlatList
         data={sampleEvents}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <Link href={`/events/${item.id}`} asChild>
-            <Pressable>
+            <Pressable style={({ pressed }) => [styles.cardPressable, pressed && styles.cardPressed]}>
               <EventCard event={item} />
             </Pressable>
           </Link>
@@ -35,6 +37,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.lg,
   },
+  header: {
+    paddingBottom: theme.spacing.md,
+  },
   eyebrow: {
     color: theme.colors.forestGreen,
     fontSize: 13,
@@ -47,15 +52,15 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginTop: theme.spacing.xs,
   },
-  subtitle: {
-    color: theme.colors.muted,
-    fontSize: 16,
-    lineHeight: 22,
-    marginTop: theme.spacing.sm,
-  },
   listContent: {
     gap: theme.spacing.md,
-    paddingTop: theme.spacing.lg,
+    paddingTop: theme.spacing.sm,
     paddingBottom: theme.spacing.xl,
+  },
+  cardPressable: {
+    borderRadius: theme.radius.sm,
+  },
+  cardPressed: {
+    opacity: 0.85,
   },
 });
