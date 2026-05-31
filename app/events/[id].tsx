@@ -54,6 +54,13 @@ export default function EventDetailsScreen() {
         />
       </View>
 
+      <MapPreviewCard
+        venueName={event.venue.name}
+        address={event.venue.address ? `${event.venue.address}, ${event.town}, VT` : `${event.town}, VT`}
+        latitude={event.latitude}
+        longitude={event.longitude}
+      />
+
       <View style={styles.descriptionCard}>
         <Text style={styles.sectionTitle}>Description</Text>
         <Text style={styles.body}>{event.description}</Text>
@@ -74,12 +81,39 @@ type InfoSectionProps = {
   detail?: string;
 };
 
+type MapPreviewCardProps = {
+  venueName: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+};
+
 function InfoSection({ title, value, detail }: InfoSectionProps) {
   return (
     <View style={styles.infoCard}>
       <Text style={styles.sectionTitle}>{title}</Text>
       <Text style={styles.infoValue}>{value}</Text>
       {detail ? <Text style={styles.infoDetail}>{detail}</Text> : null}
+    </View>
+  );
+}
+
+function MapPreviewCard({ venueName, address, latitude, longitude }: MapPreviewCardProps) {
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${latitude},${longitude} ${address}`,
+  )}`;
+
+  return (
+    <View style={styles.mapCard}>
+      <Text style={styles.sectionTitle}>Map</Text>
+      <Text style={styles.infoValue}>{venueName}</Text>
+      <Text style={styles.infoDetail}>{address}</Text>
+      <View style={styles.mapPlaceholder}>
+        <Text style={styles.mapPlaceholderText}>Map preview coming soon</Text>
+      </View>
+      <Pressable style={styles.mapButton} onPress={() => Linking.openURL(mapsUrl)}>
+        <Text style={styles.mapButtonText}>Open in Maps</Text>
+      </Pressable>
     </View>
   );
 }
@@ -166,6 +200,42 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: theme.spacing.md,
     padding: theme.spacing.md,
+  },
+  mapCard: {
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.sm,
+    borderWidth: 1,
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.md,
+  },
+  mapPlaceholder: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.cream,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.sm,
+    borderWidth: 1,
+    height: 150,
+    justifyContent: 'center',
+    marginTop: theme.spacing.md,
+  },
+  mapPlaceholderText: {
+    color: theme.colors.muted,
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  mapButton: {
+    alignItems: 'center',
+    borderColor: theme.colors.forestGreen,
+    borderRadius: theme.radius.sm,
+    borderWidth: 1,
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.md,
+  },
+  mapButtonText: {
+    color: theme.colors.forestGreen,
+    fontSize: 16,
+    fontWeight: '800',
   },
   body: {
     color: theme.colors.slate,

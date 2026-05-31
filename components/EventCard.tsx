@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { theme } from '@/constants/Colors';
 import { Event } from '@/types/event';
@@ -11,19 +11,30 @@ type EventCardProps = {
 export function EventCard({ event }: EventCardProps) {
   return (
     <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.date}>{formatEventDateRange(event)}</Text>
-        <Text style={styles.category}>{event.category}</Text>
+      <View style={styles.row}>
+        {event.imageUrl ? (
+          <Image source={{ uri: event.imageUrl }} style={styles.thumbnail} />
+        ) : (
+          <View style={styles.thumbnailPlaceholder}>
+            <Text style={styles.thumbnailPlaceholderText}>{event.category}</Text>
+          </View>
+        )}
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.date}>{formatEventDateRange(event)}</Text>
+            <Text style={styles.category}>{event.category}</Text>
+          </View>
+          <Text style={styles.title}>{event.title}</Text>
+          <Text style={styles.description} numberOfLines={2}>
+            {event.description}
+          </Text>
+          <Text style={styles.meta}>
+            {event.town} · {event.venue.name}
+          </Text>
+          <Text style={styles.venue}>{event.cost}</Text>
+          {event.isFamilyFriendly ? <Text style={styles.family}>Family friendly</Text> : null}
+        </View>
       </View>
-      <Text style={styles.title}>{event.title}</Text>
-      <Text style={styles.description} numberOfLines={2}>
-        {event.description}
-      </Text>
-      <Text style={styles.meta}>
-        {event.town} · {event.venue.name}
-      </Text>
-      <Text style={styles.venue}>{event.cost}</Text>
-      {event.isFamilyFriendly ? <Text style={styles.family}>Family friendly</Text> : null}
     </View>
   );
 }
@@ -35,6 +46,35 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.sm,
     borderWidth: 1,
     padding: theme.spacing.md,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: theme.spacing.md,
+  },
+  thumbnail: {
+    backgroundColor: theme.colors.border,
+    borderRadius: theme.radius.sm,
+    height: 96,
+    width: 96,
+  },
+  thumbnailPlaceholder: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.forestGreen,
+    borderRadius: theme.radius.sm,
+    height: 96,
+    justifyContent: 'center',
+    padding: theme.spacing.sm,
+    width: 96,
+  },
+  thumbnailPlaceholderText: {
+    color: theme.colors.cream,
+    fontSize: 12,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+  content: {
+    flex: 1,
+    minWidth: 0,
   },
   header: {
     alignItems: 'flex-start',

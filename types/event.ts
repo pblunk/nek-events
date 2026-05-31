@@ -36,4 +36,6 @@ export type Event = {
   sourceUrl?: string;
   cost: string;
   isFamilyFriendly: boolean;
+  latitude: number;
+  longitude: number;
 };

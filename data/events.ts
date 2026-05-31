@@ -1,4 +1,21 @@
-import { Event, Venue } from '@/types/event';
+import { Event, EventCategory, Venue } from '@/types/event';
+
+const categoryImageUrls: Record<EventCategory, string> = {
+  'Farmers Market':
+    'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=80',
+  Music:
+    'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80',
+  Arts:
+    'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=80',
+  Outdoor:
+    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
+  Food:
+    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80',
+  Family:
+    'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1200&q=80',
+  Community:
+    'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
+};
 
 export const venues: Venue[] = [
   {
@@ -87,10 +104,12 @@ export const sampleEvents: Event[] = [
     town: 'St. Johnsbury',
     venue: findVenue('st-j-pearl-street'),
     category: 'Farmers Market',
-    imageUrl: 'https://placehold.co/800x500/2F5D50/F7F4EA?text=St.+J+Market',
+    imageUrl: categoryImageUrls['Farmers Market'],
     sourceUrl: 'https://example.com/events/st-johnsbury-farmers-market',
     cost: 'Free',
     isFamilyFriendly: true,
+    latitude: 44.4195,
+    longitude: -72.0151,
   },
   {
     id: 'catamount-gallery-night',
@@ -101,10 +120,12 @@ export const sampleEvents: Event[] = [
     town: 'St. Johnsbury',
     venue: findVenue('catamount-arts'),
     category: 'Arts',
-    imageUrl: 'https://placehold.co/800x500/374151/F7F4EA?text=Gallery+Night',
+    imageUrl: categoryImageUrls.Arts,
     sourceUrl: 'https://example.com/events/catamount-gallery-night',
     cost: 'Free',
     isFamilyFriendly: true,
+    latitude: 44.4199,
+    longitude: -72.0198,
   },
   {
     id: 'lyndonville-bandstand-concert',
@@ -115,10 +136,12 @@ export const sampleEvents: Event[] = [
     town: 'Lyndonville',
     venue: findVenue('bandstand-park'),
     category: 'Music',
-    imageUrl: 'https://placehold.co/800x500/2F5D50/FFFFFF?text=Lyndonville+Music',
+    imageUrl: categoryImageUrls.Music,
     sourceUrl: 'https://example.com/events/lyndonville-bandstand-concert',
     cost: 'Free',
     isFamilyFriendly: true,
+    latitude: 44.5367,
+    longitude: -72.0032,
   },
   {
     id: 'newport-waterfront-music',
@@ -129,10 +152,12 @@ export const sampleEvents: Event[] = [
     town: 'Newport',
     venue: findVenue('gardner-park'),
     category: 'Music',
-    imageUrl: 'https://placehold.co/800x500/374151/FFFFFF?text=Newport+Waterfront',
+    imageUrl: categoryImageUrls.Music,
     sourceUrl: 'https://example.com/events/newport-waterfront-music',
     cost: 'Free',
     isFamilyFriendly: true,
+    latitude: 44.9398,
+    longitude: -72.2053,
   },
   {
     id: 'burke-trail-day',
@@ -143,10 +168,12 @@ export const sampleEvents: Event[] = [
     town: 'Burke',
     venue: findVenue('burke-village'),
     category: 'Outdoor',
-    imageUrl: 'https://placehold.co/800x500/2F5D50/F7F4EA?text=Burke+Trails',
+    imageUrl: categoryImageUrls.Outdoor,
     sourceUrl: 'https://example.com/events/burke-community-trail-day',
     cost: 'Free',
     isFamilyFriendly: true,
+    latitude: 44.5892,
+    longitude: -71.9409,
   },
   {
     id: 'hardwick-food-truck-friday',
@@ -157,10 +184,12 @@ export const sampleEvents: Event[] = [
     town: 'Hardwick',
     venue: findVenue('hardwick-depot'),
     category: 'Food',
-    imageUrl: 'https://placehold.co/800x500/F7F4EA/374151?text=Food+Truck+Friday',
+    imageUrl: categoryImageUrls.Food,
     sourceUrl: 'https://example.com/events/hardwick-food-truck-friday',
     cost: 'Pay as you go',
     isFamilyFriendly: true,
+    latitude: 44.5051,
+    longitude: -72.3687,
   },
   {
     id: 'danville-fair-on-the-green',
@@ -171,10 +200,12 @@ export const sampleEvents: Event[] = [
     town: 'Danville',
     venue: findVenue('danville-green'),
     category: 'Community',
-    imageUrl: 'https://placehold.co/800x500/2F5D50/FFFFFF?text=Danville+Fair',
+    imageUrl: categoryImageUrls.Community,
     sourceUrl: 'https://example.com/events/danville-fair-on-the-green',
     cost: 'Free entry',
     isFamilyFriendly: true,
+    latitude: 44.4117,
+    longitude: -72.1394,
   },
   {
     id: 'craftsbury-common-contra',
@@ -185,10 +216,12 @@ export const sampleEvents: Event[] = [
     town: 'Craftsbury',
     venue: findVenue('craftsbury-common'),
     category: 'Community',
-    imageUrl: 'https://placehold.co/800x500/374151/F7F4EA?text=Contra+Dance',
+    imageUrl: categoryImageUrls.Community,
     sourceUrl: 'https://example.com/events/craftsbury-common-contra-dance',
     cost: '$10 suggested donation',
     isFamilyFriendly: true,
+    latitude: 44.6569,
+    longitude: -72.3821,
   },
   {
     id: 'newport-harbor-kayak',
@@ -199,10 +232,12 @@ export const sampleEvents: Event[] = [
     town: 'Newport',
     venue: findVenue('newport-harbor'),
     category: 'Outdoor',
-    imageUrl: 'https://placehold.co/800x500/2F5D50/F7F4EA?text=Kayak+Paddle',
+    imageUrl: categoryImageUrls.Outdoor,
     sourceUrl: 'https://example.com/events/newport-harbor-kayak-paddle',
     cost: '$25',
     isFamilyFriendly: false,
+    latitude: 44.9368,
+    longitude: -72.2096,
   },
   {
     id: 'burke-mountain-family-day',
@@ -213,10 +248,12 @@ export const sampleEvents: Event[] = [
     town: 'Burke',
     venue: findVenue('burke-mountain'),
     category: 'Family',
-    imageUrl: 'https://placehold.co/800x500/F7F4EA/2F5D50?text=Family+Day',
+    imageUrl: categoryImageUrls.Family,
     sourceUrl: 'https://example.com/events/burke-mountain-family-day',
     cost: '$5 per person',
     isFamilyFriendly: true,
+    latitude: 44.5717,
+    longitude: -71.8937,
   },
   {
     id: 'hardwick-open-studio',
@@ -227,10 +264,12 @@ export const sampleEvents: Event[] = [
     town: 'Hardwick',
     venue: findVenue('hardwick-depot'),
     category: 'Arts',
-    imageUrl: 'https://placehold.co/800x500/374151/FFFFFF?text=Open+Studio',
+    imageUrl: categoryImageUrls.Arts,
     sourceUrl: 'https://example.com/events/hardwick-open-studio-walk',
     cost: 'Free',
     isFamilyFriendly: true,
+    latitude: 44.5051,
+    longitude: -72.3687,
   },
   {
     id: 'craftsbury-summer-trail-run',
@@ -241,9 +280,11 @@ export const sampleEvents: Event[] = [
     town: 'Craftsbury',
     venue: findVenue('craftsbury-outdoor-center'),
     category: 'Outdoor',
-    imageUrl: 'https://placehold.co/800x500/2F5D50/FFFFFF?text=Trail+Run',
+    imageUrl: categoryImageUrls.Outdoor,
     sourceUrl: 'https://example.com/events/craftsbury-summer-trail-run',
     cost: '$20 registration',
     isFamilyFriendly: false,
+    latitude: 44.6521,
+    longitude: -72.3677,
   },
 ];
