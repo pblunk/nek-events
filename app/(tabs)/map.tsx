@@ -4,39 +4,37 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GuideCard } from '@/components/GuideCard';
 import { theme } from '@/constants/Colors';
-import { useSavedItems } from '@/hooks/useSavedItems';
 import { importedPlaces } from '@/data/places';
 
-export default function SavedScreen() {
+const nearbyItems = importedPlaces.slice(0, 20);
+
+export default function MapScreen() {
   const insets = useSafeAreaInsets();
-  const { savedIds } = useSavedItems();
-  const savedItems = importedPlaces.filter((item) => savedIds.includes(item.id));
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 12 }]}>
-      <Text style={styles.eyebrow}>Trip ideas</Text>
-      <Text style={styles.title}>Saved</Text>
+      <Text style={styles.eyebrow}>Explore nearby</Text>
+      <Text style={styles.title}>Map</Text>
 
-      {savedItems.length === 0 ? (
-        <View style={styles.emptyCard}>
-          <Text style={styles.emptyTitle}>No saved places yet</Text>
-          <Text style={styles.emptyText}>Tap Save on any event or attraction to keep it here during this session.</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={savedItems}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <Link href={{ pathname: '/details/[id]', params: { id: item.id } }} asChild>
-              <Pressable style={({ pressed }) => [styles.cardPressable, pressed && styles.cardPressed]}>
-                <GuideCard item={item} compact />
-              </Pressable>
-            </Link>
-          )}
-        />
-      )}
+      <View style={styles.mapPlaceholder}>
+        <Text style={styles.mapTitle}>Map view coming soon</Text>
+        <Text style={styles.mapText}>Imported restaurants, parks, stores, museums, and attractions will appear here.</Text>
+      </View>
+
+      <Text style={styles.sectionTitle}>Nearby</Text>
+      <FlatList
+        data={nearbyItems}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <Link href={{ pathname: '/details/[id]', params: { id: item.id } }} asChild>
+            <Pressable style={({ pressed }) => [styles.cardPressable, pressed && styles.cardPressed]}>
+              <GuideCard item={item} compact />
+            </Pressable>
+          </Link>
+        )}
+      />
     </View>
   );
 }
@@ -60,29 +58,40 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginTop: theme.spacing.xs,
   },
-  emptyCard: {
+  mapPlaceholder: {
     ...theme.shadows.card,
+    alignItems: 'center',
     backgroundColor: theme.colors.white,
     borderColor: theme.colors.border,
     borderRadius: theme.radius.sm,
     borderWidth: 1,
+    height: 220,
+    justifyContent: 'center',
     marginTop: theme.spacing.lg,
     padding: theme.spacing.lg,
   },
-  emptyTitle: {
-    color: theme.colors.slate,
+  mapTitle: {
+    color: theme.colors.forestGreen,
     fontSize: 20,
     fontWeight: '800',
+    textAlign: 'center',
   },
-  emptyText: {
+  mapText: {
     color: theme.colors.muted,
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 15,
+    lineHeight: 21,
     marginTop: theme.spacing.sm,
+    textAlign: 'center',
+  },
+  sectionTitle: {
+    color: theme.colors.slate,
+    fontSize: 22,
+    fontWeight: '800',
+    marginTop: theme.spacing.lg,
   },
   listContent: {
     gap: theme.spacing.md,
-    paddingTop: theme.spacing.lg,
+    paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.xl,
   },
   cardPressable: {

@@ -2,8 +2,8 @@ import { SymbolView } from 'expo-symbols';
 import { Tabs } from 'expo-router';
 
 import Colors from '@/constants/Colors';
+import { theme } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -11,15 +11,20 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,
         tabBarStyle: {
-          backgroundColor: Colors[colorScheme].background,
-          borderTopColor: '#D8D2C2',
+          backgroundColor: theme.colors.deepForest,
+          borderTopColor: theme.colors.deepForest,
+          minHeight: 64,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '700',
+        },
+        headerShown: false,
         headerStyle: {
           backgroundColor: Colors[colorScheme].background,
         },
@@ -31,7 +36,41 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Events',
+          title: 'Discover',
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: 'magnifyingglass',
+                android: 'search',
+                web: 'search',
+              }}
+              tintColor={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: 'binoculars',
+                android: 'travel_explore',
+                web: 'travel_explore',
+              }}
+              tintColor={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="planner"
+        options={{
+          title: 'Planner',
           tabBarIcon: ({ color }) => (
             <SymbolView
               name={{
@@ -40,7 +79,24 @@ export default function TabLayout() {
                 web: 'calendar_month',
               }}
               tintColor={color}
-              size={28}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="map"
+        options={{
+          title: 'Map',
+          tabBarIcon: ({ color }) => (
+            <SymbolView
+              name={{
+                ios: 'map',
+                android: 'map',
+                web: 'map',
+              }}
+              tintColor={color}
+              size={26}
             />
           ),
         }}
@@ -57,24 +113,7 @@ export default function TabLayout() {
                 web: 'bookmark',
               }}
               tintColor={color}
-              size={28}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="submit"
-        options={{
-          title: 'Submit',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{
-                ios: 'plus.circle',
-                android: 'add_circle',
-                web: 'add_circle',
-              }}
-              tintColor={color}
-              size={28}
+              size={26}
             />
           ),
         }}

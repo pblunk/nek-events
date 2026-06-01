@@ -1,11 +1,14 @@
 export const theme = {
   colors: {
-    forestGreen: '#2F5D50',
-    cream: '#F7F4EA',
-    slate: '#374151',
+    forestGreen: '#2E6B50',
+    deepForest: '#1F4D3A',
+    cream: '#FAF7F2',
+    buttonCream: '#F7F3E9',
+    sage: '#A8B5A2',
+    slate: '#2B2B2B',
     white: '#FFFFFF',
-    muted: '#6B7280',
-    border: '#D8D2C2',
+    muted: '#5E665E',
+    border: '#E2DDD2',
   },
   spacing: {
     xs: 4,
@@ -15,8 +18,17 @@ export const theme = {
     xl: 32,
   },
   radius: {
-    sm: 8,
+    sm: 12,
     md: 12,
+  },
+  shadows: {
+    card: {
+      shadowColor: '#1F4D3A',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
+      elevation: 3,
+    },
   },
 };
 
@@ -28,14 +40,14 @@ export default {
     text: theme.colors.slate,
     background: theme.colors.cream,
     tint: tintColorLight,
-    tabIconDefault: theme.colors.muted,
-    tabIconSelected: tintColorLight,
+    tabIconDefault: theme.colors.sage,
+    tabIconSelected: theme.colors.buttonCream,
   },
   dark: {
-    text: theme.colors.cream,
+    text: theme.colors.buttonCream,
     background: theme.colors.slate,
     tint: tintColorDark,
-    tabIconDefault: '#9CA3AF',
-    tabIconSelected: tintColorDark,
+    tabIconDefault: theme.colors.sage,
+    tabIconSelected: theme.colors.buttonCream,
   },
 };

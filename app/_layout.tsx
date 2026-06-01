@@ -3,8 +3,10 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { theme } from '@/constants/Colors';
+import { SavedItemsProvider } from '@/hooks/useSavedItems';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,15 +46,20 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack
-      screenOptions={{
-        contentStyle: { backgroundColor: theme.colors.cream },
-        headerStyle: { backgroundColor: theme.colors.cream },
-        headerTintColor: theme.colors.forestGreen,
-        headerTitleStyle: { color: theme.colors.slate },
-      }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="events/[id]" options={{ title: 'Event Details' }} />
-    </Stack>
+    <SafeAreaProvider>
+      <SavedItemsProvider>
+        <Stack
+          screenOptions={{
+            contentStyle: { backgroundColor: theme.colors.cream },
+            headerStyle: { backgroundColor: theme.colors.cream },
+            headerTintColor: theme.colors.forestGreen,
+            headerTitleStyle: { color: theme.colors.slate },
+          }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="details/[id]" options={{ title: 'Details' }} />
+          <Stack.Screen name="planner" options={{ title: 'Day Planner' }} />
+        </Stack>
+      </SavedItemsProvider>
+    </SafeAreaProvider>
   );
 }

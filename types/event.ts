@@ -1,3 +1,5 @@
+import { EventItem, GuideCategory, GuideLocation, GuideTown } from './guide';
+
 export type EventCategory =
   | 'Music'
   | 'Food'
@@ -39,3 +41,8 @@ export type Event = {
   latitude: number;
   longitude: number;
 };
+
+export type ExplorerEvent = EventItem;
+export type ExplorerEventCategory = GuideCategory;
+export type ExplorerTown = GuideTown;
+export type ExplorerLocation = GuideLocation;

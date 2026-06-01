@@ -1,24 +1,21 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { theme } from '@/constants/Colors';
-import { Event } from '@/types/event';
+import { EventItem } from '@/types/guide';
 import { formatEventDateRange } from '@/utils/formatEvent';
+import { getGuideItemImage } from '@/utils/images';
 
 type EventCardProps = {
-  event: Event;
+  event: EventItem;
 };
 
 export function EventCard({ event }: EventCardProps) {
+  const image = getGuideItemImage(event);
+
   return (
     <View style={styles.card}>
       <View style={styles.row}>
-        {event.imageUrl ? (
-          <Image source={{ uri: event.imageUrl }} style={styles.thumbnail} />
-        ) : (
-          <View style={styles.thumbnailPlaceholder}>
-            <Text style={styles.thumbnailPlaceholderText}>{event.category}</Text>
-          </View>
-        )}
+        <Image source={{ uri: image.imageUrl }} style={styles.thumbnail} />
         <View style={styles.content}>
           <View style={styles.header}>
             <Text style={styles.date}>{formatEventDateRange(event)}</Text>
@@ -29,7 +26,7 @@ export function EventCard({ event }: EventCardProps) {
             {event.description}
           </Text>
           <Text style={styles.meta}>
-            {event.town} · {event.venue.name}
+            {event.location.town} · {event.location.name}
           </Text>
           <Text style={styles.venue}>{event.cost}</Text>
           {event.isFamilyFriendly ? <Text style={styles.family}>Family friendly</Text> : null}
@@ -41,6 +38,7 @@ export function EventCard({ event }: EventCardProps) {
 
 const styles = StyleSheet.create({
   card: {
+    ...theme.shadows.card,
     backgroundColor: theme.colors.white,
     borderColor: theme.colors.border,
     borderRadius: theme.radius.sm,
@@ -56,21 +54,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.sm,
     height: 96,
     width: 96,
-  },
-  thumbnailPlaceholder: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.forestGreen,
-    borderRadius: theme.radius.sm,
-    height: 96,
-    justifyContent: 'center',
-    padding: theme.spacing.sm,
-    width: 96,
-  },
-  thumbnailPlaceholderText: {
-    color: theme.colors.cream,
-    fontSize: 12,
-    fontWeight: '800',
-    textAlign: 'center',
   },
   content: {
     flex: 1,

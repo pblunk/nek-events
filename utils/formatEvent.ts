@@ -1,10 +1,10 @@
-import { Event } from '@/types/event';
+import { EventItem } from '@/types/guide';
 
-export function getEventLocation(event: Event) {
-  return `${event.venue.name}, ${event.town}`;
+export function getEventLocation(event: EventItem) {
+  return `${event.location.name}, ${event.location.town}`;
 }
 
-export function formatEventDateRange(event: Event) {
+export function formatEventDateRange(event: EventItem) {
   const start = new Date(event.startDate);
   const end = new Date(event.endDate);
 
@@ -26,7 +26,7 @@ export function formatEventDateRange(event: Event) {
   return `${date} · ${startTime}-${endTime}`;
 }
 
-export function formatEventTimeRange(event: Event) {
+export function formatEventTimeRange(event: EventItem) {
   const start = new Date(event.startDate);
   const end = new Date(event.endDate);
 
@@ -43,7 +43,7 @@ export function formatEventTimeRange(event: Event) {
   return `${startTime}-${endTime}`;
 }
 
-export function formatEventFullDate(event: Event) {
+export function formatEventFullDate(event: EventItem) {
   return new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     month: 'long',

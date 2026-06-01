@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "NEK Events",
-    "slug": "nek-events",
+    "name": "NEK Explorer",
+    "slug": "nek-explorer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "nekevents",
+    "scheme": "nekexplorer",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#F7F4EA",
+        "backgroundColor": "#FAF7F2",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -31,7 +31,7 @@
         {
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#F7F4EA"
+          "backgroundColor": "#FAF7F2"
         }
       ]
     ],
