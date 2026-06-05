@@ -1,5 +1,7 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 
+import { PlaceImagePlaceholder } from '@/components/PlaceImagePlaceholder';
+import { VermontRating } from '@/components/VermontRating';
 import { theme } from '@/constants/Colors';
 import { AnyGuideItem } from '@/types/guide';
 import { getGuideItemImage } from '@/utils/images';
@@ -14,7 +16,11 @@ export function GuideCard({ item, compact = false }: GuideCardProps) {
 
   return (
     <View style={[styles.card, compact && styles.compactCard]}>
-      <Image source={{ uri: image.imageUrl }} style={compact ? styles.compactImage : styles.image} />
+      {image.imageUrl ? (
+        <Image source={{ uri: image.imageUrl }} style={compact ? styles.compactImage : styles.image} />
+      ) : (
+        <PlaceImagePlaceholder category={item.category} style={compact ? styles.compactImage : styles.image} />
+      )}
       <View style={styles.content}>
         <Text style={styles.category}>{item.category}</Text>
         <Text style={styles.title} numberOfLines={compact ? 2 : 3}>
@@ -23,22 +29,13 @@ export function GuideCard({ item, compact = false }: GuideCardProps) {
         <Text style={styles.description} numberOfLines={compact ? 2 : 3}>
           {item.description}
         </Text>
+        <VermontRating rating={item.rating} reviewCount={item.userRatingsTotal} compact={compact} />
         <Text style={styles.meta}>
           {item.detectedTown ?? item.sourceTown ?? item.location.town} · {item.location.name}
         </Text>
-        {item.detectedTown || item.sourceTown ? (
-          <Text style={styles.townMeta} numberOfLines={1}>
-            Town: {item.detectedTown ?? 'Unknown'} · Source: {item.sourceTown ?? item.location.town}
-          </Text>
-        ) : null}
         <Text style={styles.address} numberOfLines={1}>
           {item.location.address}
         </Text>
-        {item.rating ? (
-          <Text style={styles.rating}>
-            {item.rating.toFixed(1)} · {item.userRatingsTotal ?? 0} reviews
-          </Text>
-        ) : null}
       </View>
     </View>
   );
@@ -98,16 +95,5 @@ const styles = StyleSheet.create({
     color: theme.colors.muted,
     fontSize: 13,
     marginTop: theme.spacing.xs,
-  },
-  townMeta: {
-    color: theme.colors.muted,
-    fontSize: 12,
-    marginTop: theme.spacing.xs,
-  },
-  rating: {
-    color: theme.colors.forestGreen,
-    fontSize: 13,
-    fontWeight: '800',
-    marginTop: theme.spacing.sm,
   },
 });

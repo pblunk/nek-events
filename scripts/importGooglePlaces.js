@@ -8,6 +8,7 @@ const OUTPUT_PATH = path.resolve(__dirname, '../data/places.json');
 const LOCAL_BUSINESS_RADIUS_METERS = 8000;
 const DESTINATION_RADIUS_METERS = 12000;
 const PLACES_SEARCH_NEARBY_URL = 'https://places.googleapis.com/v1/places:searchNearby';
+const PHOTO_MEDIA_DELAY_MS = 200;
 const FIELD_MASK =
   'places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.websiteUri,places.googleMapsUri,places.photos,places.primaryType,places.types';
 const NEK_BOUNDS = {
@@ -218,8 +219,55 @@ async function searchNearbyPlaces({ town, category }) {
   return payload.places ?? [];
 }
 
+function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function getPhotoAttributionText(photoAttributions) {
+  if (!photoAttributions?.length) {
+    return 'Google Places photo';
+  }
+
+  const attributionText = photoAttributions
+    .map((attribution) => attribution.displayName)
+    .filter(Boolean)
+    .join(', ');
+
+  return attributionText || 'Google Places photo';
+}
+
+async function fetchPhotoUri(photoReference) {
+  if (!photoReference) {
+    return null;
+  }
+
+  const url = new URL(`https://places.googleapis.com/v1/${photoReference}/media`);
+  url.searchParams.set('maxWidthPx', '800');
+  url.searchParams.set('key', GOOGLE_PLACES_API_KEY);
+  url.searchParams.set('skipHttpRedirect', 'true');
+
+  const response = await fetch(url);
+  const payload = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    console.warn(
+      `Photo Media request failed for ${photoReference}: ${response.status} ${
+        response.statusText
+      } ${payload.error?.message ?? ''}`,
+    );
+    return null;
+  }
+
+  return payload.photoUri ?? null;
+}
+
 function normalizePlace(place, town, category) {
-  const photoName = place.photos?.[0]?.name ?? null;
+  const photo = place.photos?.[0] ?? null;
+  const photoReference = photo?.name ?? null;
+  const photoAttributions = photo?.authorAttributions ?? [];
+  const imageCredit = getPhotoAttributionText(photoAttributions);
   const address = place.formattedAddress ?? null;
   const detectedTown = detectTownFromAddress(address);
 
@@ -240,15 +288,22 @@ function normalizePlace(place, town, category) {
     userRatingsTotal: place.userRatingCount ?? null,
     websiteUri: place.websiteUri ?? null,
     googleMapsUri: place.googleMapsUri ?? null,
-    image: photoName
+    photoReference,
+    photoAttributions,
+    imageUrl: null,
+    image: photoReference
       ? {
-          photoName,
+          photoName: photoReference,
+          photoReference,
+          photoAttributions,
           imageUrl: null,
-          imageCredit: 'Google Places photo',
+          imageCredit,
           imageSource: 'Google Places Photos',
         }
       : {
           photoName: null,
+          photoReference: null,
+          photoAttributions: [],
           imageUrl: null,
           imageCredit: null,
           imageSource: null,
@@ -265,8 +320,37 @@ function normalizePlace(place, town, category) {
 }
 
 function mergePlace(existingPlace, nextPlace) {
+  const photoReference = existingPlace.photoReference ?? nextPlace.photoReference ?? null;
+  const photoAttributions = existingPlace.photoAttributions?.length
+    ? existingPlace.photoAttributions
+    : nextPlace.photoAttributions ?? [];
+  const imageCredit = getPhotoAttributionText(photoAttributions);
+
   return {
     ...existingPlace,
+    photoReference,
+    photoAttributions,
+    imageUrl: existingPlace.imageUrl ?? nextPlace.imageUrl ?? null,
+    image: {
+      ...(existingPlace.image ?? {}),
+      ...(photoReference
+        ? {
+            photoName: photoReference,
+            photoReference,
+            photoAttributions,
+            imageUrl: existingPlace.image?.imageUrl ?? nextPlace.image?.imageUrl ?? null,
+            imageCredit,
+            imageSource: 'Google Places Photos',
+          }
+        : {
+            photoName: null,
+            photoReference: null,
+            photoAttributions: [],
+            imageUrl: null,
+            imageCredit: null,
+            imageSource: null,
+          }),
+    },
     categories: Array.from(new Set([...existingPlace.categories, ...nextPlace.categories])),
     importCategories: Array.from(
       new Set([...(existingPlace.importCategories ?? [existingPlace.importCategory]), nextPlace.importCategory]),
@@ -304,6 +388,26 @@ async function importGooglePlaces() {
     }
   }
 
+  const sortedPlaces = Array.from(placesById.values()).sort((a, b) => a.name.localeCompare(b.name));
+  const placesWithPhotos = sortedPlaces.filter((place) => place.photoReference);
+
+  console.log(`Fetching photo URLs for ${placesWithPhotos.length} places...`);
+
+  for (const [index, place] of placesWithPhotos.entries()) {
+    console.log(`Fetching photo ${index + 1}/${placesWithPhotos.length}: ${place.name}`);
+
+    const imageUrl = await fetchPhotoUri(place.photoReference);
+    place.imageUrl = imageUrl;
+    place.image = {
+      ...place.image,
+      imageUrl,
+    };
+
+    if (index < placesWithPhotos.length - 1) {
+      await delay(PHOTO_MEDIA_DELAY_MS);
+    }
+  }
+
   const output = {
     importedAt: new Date().toISOString(),
     provider: 'Places API New Nearby Search',
@@ -316,7 +420,7 @@ async function importGooglePlaces() {
     towns,
     categories,
     count: placesById.size,
-    places: Array.from(placesById.values()).sort((a, b) => a.name.localeCompare(b.name)),
+    places: sortedPlaces,
   };
 
   await fs.writeFile(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`);

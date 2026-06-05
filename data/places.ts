@@ -19,7 +19,20 @@ type ImportedPlace = {
   userRatingsTotal: number | null;
   websiteUri: string | null;
   googleMapsUri: string | null;
+  photoReference?: string | null;
+  photoAttributions?: {
+    displayName?: string;
+    uri?: string;
+    photoUri?: string;
+  }[];
+  imageUrl?: string | null;
   image: {
+    photoReference?: string | null;
+    photoAttributions?: {
+      displayName?: string;
+      uri?: string;
+      photoUri?: string;
+    }[];
     imageUrl: string | null;
     imageCredit: string | null;
     imageSource: 'Google Places Photos' | null;
@@ -222,9 +235,7 @@ export const importedPlaces = placesData.places
       id: `place-${place.googlePlaceId}`,
       kind,
       title: place.name ?? 'Unnamed place',
-      description: `${place.name ?? 'Imported place'} is a ${category.toLowerCase()} stop in ${displayTown}.${
-        place.rating ? ` Rated ${place.rating.toFixed(1)} by visitors.` : ''
-      }`,
+      description: `${place.name ?? 'Imported place'} is a ${category.toLowerCase()} stop in ${displayTown}.`,
       category,
       location: {
         name: place.name ?? 'Unnamed place',
@@ -233,7 +244,7 @@ export const importedPlaces = placesData.places
         latitude: place.latitude ?? 0,
         longitude: place.longitude ?? 0,
       },
-      imageUrl: place.image?.imageUrl ?? undefined,
+      imageUrl: place.imageUrl ?? place.image?.imageUrl ?? undefined,
       imageCredit: place.image?.imageCredit ?? undefined,
       imageSource: place.image?.imageSource ?? undefined,
       sourceUrl: place.googleMapsUri ?? place.websiteUri ?? undefined,
